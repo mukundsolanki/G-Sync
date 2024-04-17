@@ -1,51 +1,71 @@
 import 'package:flutter/material.dart';
 
-class XYABButtons extends StatelessWidget {
-  const XYABButtons({Key? key}) : super(key: key);
+class ActionButtons extends StatelessWidget {
+  final double buttonSize;
+
+  const ActionButtons({Key? key, this.buttonSize = 50}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 0.7,
-      child: Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        padding: EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('X', style: TextStyle(color: Colors.white)),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Y', style: TextStyle(color: Colors.white)),
-                ),
-              ],
+    return Container(
+      width: buttonSize * 3,
+      height: buttonSize * 3,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: buttonSize,
+            left: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                // Action when X button is pressed
+              },
+              child: Text('X'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(buttonSize, buttonSize),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('A', style: TextStyle(color: Colors.white)),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('B', style: TextStyle(color: Colors.white)),
-                ),
-              ],
+          ),
+          Positioned(
+            top: 0,
+            left: buttonSize,
+            child: ElevatedButton(
+              onPressed: () {
+                // Action when Y button is pressed
+              },
+              child: Text('Y'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(buttonSize, buttonSize),
+              ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            top: buttonSize * 2,
+            left: buttonSize,
+            child: ElevatedButton(
+              onPressed: () {
+                // Action when A button is pressed
+              },
+              child: Text('A'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(buttonSize, buttonSize),
+              ),
+            ),
+          ),
+          Positioned(
+            top: buttonSize,
+            left: buttonSize * 2,
+            child: ElevatedButton(
+              onPressed: () {
+                // Action when B button is pressed
+              },
+              child: Text('B'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(buttonSize, buttonSize),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

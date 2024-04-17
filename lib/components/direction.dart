@@ -1,44 +1,63 @@
 import 'package:flutter/material.dart';
 
 class Direction extends StatelessWidget {
-  const Direction({Key? key}) : super(key: key);
+  final double buttonSize;
+
+  const Direction({Key? key, this.buttonSize = 100}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 0.7,
-      child: Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.grey[800],
-          shape: BoxShape.circle,
-        ),
-        padding: EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(Icons.arrow_upward, size: 20, color: Colors.white),
-              ],
+    return Container(
+      width: buttonSize * 3,
+      height: buttonSize * 3,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: 0,
+            left: buttonSize,
+            child: IconButton(
+              icon: Icon(Icons.arrow_upward),
+              iconSize: buttonSize,
+              onPressed: () {
+                // Action when up button is pressed
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(Icons.arrow_back, size: 20, color: Colors.white),
-                Icon(Icons.arrow_forward, size: 20, color: Colors.white),
-              ],
+          ),
+          Positioned(
+            top: buttonSize * 2,
+            left: buttonSize,
+            child: IconButton(
+              icon: Icon(Icons.arrow_downward),
+              iconSize: buttonSize,
+              onPressed: () {
+                // Action when down button is pressed
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(Icons.arrow_downward, size: 20, color: Colors.white),
-              ],
+          ),
+          Positioned(
+            top: buttonSize,
+            left: 0,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back),
+              iconSize: buttonSize,
+              onPressed: () {
+                // Action when left button is pressed
+              },
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            top: buttonSize,
+            right: 0,
+            child: IconButton(
+              icon: Icon(Icons.arrow_forward),
+              iconSize: buttonSize,
+              onPressed: () {
+                // Action when right button is pressed
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

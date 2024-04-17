@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import  'package:gsync/components/direction.dart';
 
 const step = 10.0;
-const joystickScale = 0.5; // Adjust this value to change the size of the joystick
+const joystickScale = 0.5;
+const directionScale = 0.5;
 
 class JoystickLeft extends StatefulWidget {
   const JoystickLeft({Key? key}) : super(key: key);
@@ -19,12 +21,11 @@ class _JoystickLeftState extends State<JoystickLeft> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
       body: SafeArea(
         child: Stack(
           children: [
             Align(
-              alignment: const Alignment(-0.8, 0), // Left alignment
+              alignment: Alignment.centerLeft,
               child: Transform.scale(
                 scale: joystickScale,
                 child: Joystick(
@@ -37,6 +38,13 @@ class _JoystickLeftState extends State<JoystickLeft> {
                     });
                   },
                 ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Transform.scale(
+                scale: directionScale,
+                child: Direction(),
               ),
             ),
           ],
