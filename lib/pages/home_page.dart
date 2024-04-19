@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gsync/components/joystick_left.dart';
 import 'package:gsync/components/joystick_right.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,20 +30,28 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+
+          // LB Button
           Positioned(
             left: 16,
             top: 30,
             child: IconButton(
               icon: Icon(Icons.gamepad, size: 32),
-              onPressed: () {},
+              onPressed: () {
+                _handleLBButtonPress();
+              },
             ),
           ),
+
+          // RB Button
           Positioned(
             right: 16,
             top: 30,
             child: IconButton(
               icon: Icon(Icons.gamepad, size: 32),
-              onPressed: () {},
+              onPressed: () {
+                _handleRBButtonPress();
+              },
             ),
           ),
           Positioned(
@@ -110,5 +119,17 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void _handleRBButtonPress() async {
+    if (await Vibrate.canVibrate) {
+      Vibrate.feedback(FeedbackType.success);
+    }
+  }
+
+  void _handleLBButtonPress() async {
+    if (await Vibrate.canVibrate) {
+      Vibrate.feedback(FeedbackType.success);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class Direction extends StatelessWidget {
   final double buttonSize;
@@ -20,7 +21,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_upward),
               iconSize: buttonSize,
               onPressed: () {
-                // Action when up button is pressed
+                _handleHapticFeedback();
               },
             ),
           ),
@@ -31,7 +32,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_downward),
               iconSize: buttonSize,
               onPressed: () {
-                // Action when down button is pressed
+                _handleHapticFeedback();
               },
             ),
           ),
@@ -42,7 +43,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_back),
               iconSize: buttonSize,
               onPressed: () {
-                // Action when left button is pressed
+                _handleHapticFeedback();
               },
             ),
           ),
@@ -53,12 +54,18 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_forward),
               iconSize: buttonSize,
               onPressed: () {
-                // Action when right button is pressed
+                _handleHapticFeedback();
               },
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _handleHapticFeedback() async {
+    if (await Vibrate.canVibrate) {
+      Vibrate.feedback(FeedbackType.success);
+    }
   }
 }
