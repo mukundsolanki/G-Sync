@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:web_socket_channel/io.dart';
 
 class Direction extends StatelessWidget {
   final double buttonSize;
+  final IOWebSocketChannel channel;
 
-  const Direction({Key? key, this.buttonSize = 100}) : super(key: key);
+  const Direction({Key? key, this.buttonSize = 100, required this.channel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_upward),
               iconSize: buttonSize,
               onPressed: () {
-                _handleHapticFeedback();
+                _handleButtonPress('UP');
               },
             ),
           ),
@@ -32,7 +35,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_downward),
               iconSize: buttonSize,
               onPressed: () {
-                _handleHapticFeedback();
+                _handleButtonPress('DOWN');
               },
             ),
           ),
@@ -43,7 +46,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_back),
               iconSize: buttonSize,
               onPressed: () {
-                _handleHapticFeedback();
+                _handleButtonPress('LEFT');
               },
             ),
           ),
@@ -54,7 +57,7 @@ class Direction extends StatelessWidget {
               icon: Icon(Icons.arrow_forward),
               iconSize: buttonSize,
               onPressed: () {
-                _handleHapticFeedback();
+                _handleButtonPress('RIGHT');
               },
             ),
           ),
@@ -63,9 +66,10 @@ class Direction extends StatelessWidget {
     );
   }
 
-  void _handleHapticFeedback() async {
+  void _handleButtonPress(String direction) async {
     if (await Vibrate.canVibrate) {
       Vibrate.feedback(FeedbackType.success);
     }
+    channel.sink.add(direction);
   }
 }

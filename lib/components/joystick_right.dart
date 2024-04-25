@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:gsync/components/xyab_buttons.dart';
+import 'package:web_socket_channel/io.dart';
 
 const step = 10.0;
-const joystickScale = 0.5; 
+const joystickScale = 0.5;
 const topSpacing = 90.0;
 
 class JoystickRight extends StatefulWidget {
-  const JoystickRight({Key? key}) : super(key: key);
+  final IOWebSocketChannel channel;
+
+  const JoystickRight({Key? key, required this.channel}) : super(key: key);
 
   @override
   State<JoystickRight> createState() => _JoystickRightState();
@@ -17,6 +22,8 @@ class _JoystickRightState extends State<JoystickRight> {
   double _x = 0;
   double _y = 0;
   JoystickMode _joystickMode = JoystickMode.all;
+
+  final channel = IOWebSocketChannel.connect('ws://192.168.29.192:8080');
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class _JoystickRightState extends State<JoystickRight> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: ActionButtons(),
+                child: ActionButtons(channel: channel,),
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -38,9 +45,12 @@ class _JoystickRightState extends State<JoystickRight> {
                     mode: _joystickMode,
                     listener: (details) {
                       setState(() {
-                        _x += step * details.x;
-                        _y += step * details.y;
+                        _x = details.x;
+                        _y = details.y;
                         print('X: $_x, Y: $_y');
+                        // Send joystick values to the server as JSON
+                        final data = {'x': _x, 'y': _y};
+                        widget.channel.sink.add(jsonEncode(data));
                       });
                     },
                   ),

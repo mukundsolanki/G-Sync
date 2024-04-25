@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:gsync/components/joystick_left.dart';
 import 'package:gsync/components/joystick_right.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:web_socket_channel/io.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final IOWebSocketChannel channel;
+
+  const HomePage({Key? key, required this.channel}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -13,6 +16,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double ltValue = 0.0;
   double rtValue = 0.0;
+
+  final channel = IOWebSocketChannel.connect('ws://192.168.29.192:8080');
 
   @override
   Widget build(BuildContext context) {
@@ -23,24 +28,14 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: JoystickLeft(),
+                child: JoystickLeft(
+                  channel: channel,
+                ),
               ),
               Expanded(
-                child: JoystickRight(),
+                child: JoystickRight(channel: channel,),
               ),
             ],
-          ),
-
-          // LB Button
-          Positioned(
-            left: 16,
-            top: 30,
-            child: IconButton(
-              icon: Icon(Icons.gamepad, size: 32),
-              onPressed: () {
-                _handleLBButtonPress();
-              },
-            ),
           ),
 
           // RB Button
@@ -50,7 +45,18 @@ class _HomePageState extends State<HomePage> {
             child: IconButton(
               icon: Icon(Icons.gamepad, size: 32),
               onPressed: () {
-                _handleRBButtonPress();
+                _handleButtonPress('RB');
+              },
+            ),
+          ),
+          // LB Button
+          Positioned(
+            left: 16,
+            top: 30,
+            child: IconButton(
+              icon: Icon(Icons.gamepad, size: 32),
+              onPressed: () {
+                _handleButtonPress('LB');
               },
             ),
           ),
@@ -73,12 +79,14 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       ltValue = value;
                     });
-                    print('LT Value: $value');
+                    _sendSliderData('LT', value);
                   },
                   onChangeEnd: (value) {
-                    print('LT Slider Released');
+                    // Reset slider value on release
+                    _sendSliderData('LT', 0);
                     setState(() {
-                      ltValue = 0; // Reset the slider value
+                      ltValue =
+                          0;
                     });
                   },
                 ),
@@ -104,12 +112,14 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       rtValue = value;
                     });
-                    print('RT Value: $value');
+                    _sendSliderData('RT', value);
                   },
                   onChangeEnd: (value) {
-                    print('RT Slider Released');
+                    // Reset slider value on release
+                    _sendSliderData('RT', 0);
                     setState(() {
-                      rtValue = 0; // Reset the slider value
+                      rtValue =
+                          0;
                     });
                   },
                 ),
@@ -121,15 +131,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _handleRBButtonPress() async {
+  void _handleButtonPress(String buttonName) async {
     if (await Vibrate.canVibrate) {
       Vibrate.feedback(FeedbackType.success);
     }
+    widget.channel.sink.add(buttonName);
   }
 
-  void _handleLBButtonPress() async {
-    if (await Vibrate.canVibrate) {
-      Vibrate.feedback(FeedbackType.success);
-    }
+  void _sendSliderData(String sliderName, double value) {
+    widget.channel.sink.add('$sliderName:$value');
+  }
+
+  @override
+  void dispose() {
+    widget.channel.sink.close();
+    super.dispose();
   }
 }
