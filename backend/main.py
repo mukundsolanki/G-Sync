@@ -30,9 +30,11 @@ async def handle_client(websocket, path):
                 try:
                     data = json.loads(message)
 
-                    if isinstance(data, dict) and 'x' in data and 'y' in data and isinstance(data['x'], (int, float)) and isinstance(data['y'], (int, float)):
-                        print(f"Joystick values: X={data['x']}, Y={data['y']}")
+                    if isinstance(data, dict) and 'joystick' in data and 'x' in data and 'y' in data \
+                            and isinstance(data['x'], (int, float)) and isinstance(data['y'], (int, float)):
+                        print(f"Joystick values ({data['joystick']}): X={data['x']}, Y={data['y']}")
                         # Process the joystick values here
+                        move_mouse(data['x'], data['y'])
 
                 except json.JSONDecodeError as e:
                     print(f"Error parsing JSON message: {e}")
@@ -53,12 +55,17 @@ async def handle_client(websocket, path):
     except websockets.exceptions.ConnectionClosedOK:
         print("Client disconnected")
 
+
 def is_json(string):
     try:
         json.loads(string)
         return True
     except ValueError:
         return False
+
+def move_mouse(x, y):
+    scaling_factor = 100
+    pyautogui.moveRel(x * scaling_factor, y * scaling_factor)
 
 start_server = websockets.serve(handle_client, '0.0.0.0', 8080)
 
