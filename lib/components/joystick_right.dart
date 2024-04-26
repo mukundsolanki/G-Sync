@@ -23,8 +23,6 @@ class _JoystickRightState extends State<JoystickRight> {
   double _y = 0;
   JoystickMode _joystickMode = JoystickMode.all;
 
-  final channel = IOWebSocketChannel.connect('ws://192.168.29.192:8080');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +33,7 @@ class _JoystickRightState extends State<JoystickRight> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: ActionButtons(channel: channel,),
+                child: ActionButtons(channel: widget.channel),
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -48,8 +46,7 @@ class _JoystickRightState extends State<JoystickRight> {
                         _x = details.x;
                         _y = details.y;
                         print('X: $_x, Y: $_y');
-                        // Send joystick values to the server as JSON
-                        final data = {'x': _x, 'y': _y};
+                        final data = {'joystick': 'right', 'x': _x, 'y': _y};
                         widget.channel.sink.add(jsonEncode(data));
                       });
                     },
