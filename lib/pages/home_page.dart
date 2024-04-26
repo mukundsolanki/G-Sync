@@ -38,25 +38,25 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
 
-          // RB Button
+          // Rb Button
           Positioned(
             right: 16,
             top: 30,
             child: IconButton(
               icon: Icon(Icons.gamepad, size: 32),
               onPressed: () {
-                _handleButtonPress('RB');
+                _handleButtonPress('Rb');
               },
             ),
           ),
-          // LB Button
+          // Lb Button
           Positioned(
             left: 16,
             top: 30,
             child: IconButton(
               icon: Icon(Icons.gamepad, size: 32),
               onPressed: () {
-                _handleButtonPress('LB');
+                _handleButtonPress('Lb');
               },
             ),
           ),
